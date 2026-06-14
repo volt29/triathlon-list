@@ -1,4 +1,5 @@
-const events = JSON.parse((window.__TRIATHLON_EVENT_CHUNKS || []).join(""));
+const fields = ["name", "date", "url", "place", "drive_km", "price", "status", "distance", "source"];
+const events = (window.__TRIATHLON_EVENTS || []).map((row) => Object.fromEntries(fields.map((field, index) => [field, row[index]])));
 const searchInput = document.getElementById("searchInput");
 const monthFilter = document.getElementById("monthFilter");
 const distanceFilter = document.getElementById("distanceFilter");
