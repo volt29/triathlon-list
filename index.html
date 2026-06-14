@@ -3,49 +3,100 @@
 <head>
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1" />
-  <meta http-equiv="refresh" content="0; url=./triathlon_europe_jun-oct_2026_full_half.html" />
-  <title>Triathlony w Europie 2026</title>
-  <style>
-    body {
-      margin: 0;
-      min-height: 100vh;
-      display: grid;
-      place-items: center;
-      background: #f5f7f8;
-      color: #17201d;
-      font-family: Inter, ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
-    }
-    main {
-      width: min(92vw, 560px);
-      padding: 28px;
-      border: 1px solid #dce3e1;
-      border-radius: 8px;
-      background: #fff;
-      box-shadow: 0 20px 55px rgba(22, 33, 30, 0.10);
-    }
-    h1 {
-      margin: 0 0 10px;
-      font-size: 28px;
-      line-height: 1.1;
-      letter-spacing: 0;
-    }
-    p {
-      margin: 0;
-      color: #66716d;
-    }
-    a {
-      color: #05594f;
-      text-underline-offset: 3px;
-    }
-  </style>
+  <title>Triathlony Europa 2026: pełny dystans i 1/2</title>
+  <link rel="stylesheet" href="./styles.css" />
 </head>
 <body>
-  <main>
-    <h1>Triathlony w Europie 2026</h1>
-    <p>Przekierowuję do tabeli. <a href="./triathlon_europe_jun-oct_2026_full_half.html">Otwórz tabelę ręcznie</a>.</p>
+  <main class="page">
+    <header class="report-header">
+      <div class="title-row">
+        <div>
+          <h1>Triathlony w Europie 2026: pełny dystans i 1/2</h1>
+          <p class="subtitle">Zakres: czerwiec-październik 2026. Tabela łączy pełny dystans, 140.6/226 km, oraz dystans 1/2, 70.3/około 113 km, z publicznych kalendarzy i stron organizatorów. Dystans autem liczony jest z centrum Warszawy do lokalizacji startu lub miejscowości z tabeli.</p>
+        </div>
+        <div class="stamp">Stan sprawdzenia: 14 czerwca 2026</div>
+      </div>
+      <section class="metrics" aria-label="Podsumowanie">
+        <div class="metric"><span class="metric-value" id="totalCount">0</span><span class="metric-label">wydarzeń w tabeli</span></div>
+        <div class="metric"><span class="metric-value" id="fullCount">0</span><span class="metric-label">pełny dystans</span></div>
+        <div class="metric"><span class="metric-value" id="halfCount">0</span><span class="metric-label">dystans 1/2</span></div>
+        <div class="metric"><span class="metric-value" id="countryCount">0</span><span class="metric-label">kraje i regiony</span></div>
+        <div class="metric"><span class="metric-value">5</span><span class="metric-label">miesięcy startów</span></div>
+      </section>
+    </header>
+
+    <section class="toolbar" aria-label="Filtry tabeli">
+      <div class="field">
+        <label for="searchInput">Szukaj</label>
+        <input id="searchInput" type="search" placeholder="Nazwa, kraj, miasto, cena..." autocomplete="off" />
+      </div>
+      <div class="field">
+        <label for="monthFilter">Miesiąc</label>
+        <select id="monthFilter">
+          <option value="all">Wszystkie</option>
+          <option value="06">Czerwiec</option>
+          <option value="07">Lipiec</option>
+          <option value="08">Sierpień</option>
+          <option value="09">Wrzesień</option>
+          <option value="10">Październik</option>
+        </select>
+      </div>
+      <div class="field">
+        <label for="distanceFilter">Dystans</label>
+        <select id="distanceFilter">
+          <option value="all">Wszystkie</option>
+          <option value="Pełny">Pełny</option>
+          <option value="1/2">1/2</option>
+        </select>
+      </div>
+      <div class="field">
+        <label for="statusFilter">Status ceny</label>
+        <select id="statusFilter">
+          <option value="all">Wszystkie</option>
+          <option value="open">Cena widoczna</option>
+          <option value="sold">Wyprzedane</option>
+          <option value="unknown">Brak jawnej ceny</option>
+          <option value="past">Po terminie</option>
+        </select>
+      </div>
+      <button type="button" id="resetButton">Wyczyść</button>
+    </section>
+
+    <section class="table-shell" aria-labelledby="tableHeading">
+      <div class="table-topline">
+        <h2 class="table-title" id="tableHeading">Tabela zawodów</h2>
+        <span class="result-count" id="resultCount"></span>
+      </div>
+      <div class="table-wrap">
+        <table>
+          <thead>
+            <tr>
+              <th scope="col">Nazwa zawodów</th>
+              <th scope="col">Data</th>
+              <th scope="col">Dystans</th>
+              <th scope="col">Link</th>
+              <th scope="col">Miejsce</th>
+              <th scope="col">Dystans autem z Warszawy</th>
+              <th scope="col">Cena za pakiet</th>
+              <th scope="col">Źródło</th>
+            </tr>
+          </thead>
+          <tbody id="eventRows"></tbody>
+        </table>
+        <div class="empty" id="emptyState" hidden>Brak wyników dla wybranych filtrów.</div>
+      </div>
+    </section>
+
+    <p class="note">Przy „brak jawnej ceny” system zapisów był dynamiczny, wymagał konta, był zamknięty albo nie pokazywał publicznej kwoty. Część czerwcowych startów była już po terminie w dniu sprawdzenia. Dystanse samochodem są zaokrąglone do pełnych kilometrów i bazują na trasie OSRM dla współrzędnych z Nominatim/OpenStreetMap; dla nazw regionów użyta jest najbliższa konkretna miejscowość startowa.</p>
   </main>
-  <script>
-    window.location.replace("./triathlon_europe_jun-oct_2026_full_half.html");
-  </script>
+
+  <script src="./events-01.js"></script>
+  <script src="./events-02.js"></script>
+  <script src="./events-03.js"></script>
+  <script src="./events-04.js"></script>
+  <script src="./events-05.js"></script>
+  <script src="./events-06.js"></script>
+  <script src="./events-07.js"></script>
+  <script src="./app.js"></script>
 </body>
 </html>
