@@ -53,6 +53,28 @@ button:hover { background: var(--accent-dark); }
 table { width: 100%; border-collapse: separate; border-spacing: 0; min-width: 1320px; }
 th, td { padding: 12px 13px; border-bottom: 1px solid var(--line); vertical-align: top; text-align: left; }
 th { position: sticky; top: 0; z-index: 2; background: #17201d; color: #f8fbfa; font-size: 12px; font-weight: 760; text-transform: uppercase; letter-spacing: 0.04em; }
+.sortable-heading { padding: 0; }
+.sort-button {
+  all: unset;
+  box-sizing: border-box;
+  display: inline-flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 8px;
+  width: 100%;
+  min-height: 44px;
+  padding: 12px 13px;
+  color: inherit;
+  font: inherit;
+  letter-spacing: inherit;
+  text-transform: inherit;
+  cursor: pointer;
+}
+.sort-button:hover,
+.sort-button:focus-visible { background: rgba(255, 255, 255, 0.10); }
+.sort-button:focus-visible { outline: 3px solid rgba(255, 255, 255, 0.35); outline-offset: -3px; }
+.sort-indicator { font-size: 11px; opacity: 0.5; }
+.sort-button[aria-pressed="true"] .sort-indicator { opacity: 1; }
 tbody tr:hover { background: #f7fbfa; }
 tbody tr:last-child td { border-bottom: 0; }
 .date { white-space: nowrap; font-weight: 720; color: #23302c; }
