@@ -5,16 +5,31 @@ const monthFilter = document.getElementById("monthFilter");
 const distanceFilter = document.getElementById("distanceFilter");
 const statusFilter = document.getElementById("statusFilter");
 const resetButton = document.getElementById("resetButton");
+const sortDriveButton = document.getElementById("sortDriveButton");
 const rows = document.getElementById("eventRows");
 const resultCount = document.getElementById("resultCount");
 const emptyState = document.getElementById("emptyState");
 const dateFormatter = new Intl.DateTimeFormat("pl-PL", { day: "2-digit", month: "long", year: "numeric" });
 const statusLabels = { open: "Cena widoczna", sold: "Wyprzedane", unknown: "Brak jawnej ceny", past: "Po terminie" };
+let sortDriveAscending = false;
 
 document.getElementById("totalCount").textContent = events.length;
 document.getElementById("fullCount").textContent = events.filter((event) => event.distance === "Pełny").length;
 document.getElementById("halfCount").textContent = events.filter((event) => event.distance === "1/2").length;
 document.getElementById("countryCount").textContent = new Set(events.map((event) => event.place.split(",").at(-1).trim())).size;
+
+function getDriveDistance(event) {
+  const driveKm = Number(event.drive_km);
+  return Number.isFinite(driveKm) ? driveKm : Number.POSITIVE_INFINITY;
+}
+
+function compareDriveDistance(a, b) {
+  const distanceDiff = getDriveDistance(a) - getDriveDistance(b);
+  if (distanceDiff !== 0) return distanceDiff;
+  const dateDiff = new Date(`${a.date}T12:00:00`) - new Date(`${b.date}T12:00:00`);
+  if (dateDiff !== 0) return dateDiff;
+  return a.name.localeCompare(b.name, "pl");
+}
 
 function renderRows() {
   const query = searchInput.value.trim().toLowerCase();
@@ -28,13 +43,14 @@ function renderRows() {
       && (distance === "all" || event.distance === distance)
       && (status === "all" || event.status === status);
   });
+  const visible = sortDriveAscending ? filtered.slice().sort(compareDriveDistance) : filtered;
 
   rows.replaceChildren();
   emptyState.hidden = filtered.length > 0;
   resultCount.textContent = `${filtered.length} z ${events.length} wydarzeń`;
   const fragment = document.createDocumentFragment();
 
-  filtered.forEach((event) => {
+  visible.forEach((event) => {
     const row = document.createElement("tr");
     const name = document.createElement("td");
     name.className = "event-name";
@@ -83,11 +99,18 @@ searchInput.addEventListener("input", renderRows);
 monthFilter.addEventListener("change", renderRows);
 distanceFilter.addEventListener("change", renderRows);
 statusFilter.addEventListener("change", renderRows);
+sortDriveButton.addEventListener("click", () => {
+  sortDriveAscending = !sortDriveAscending;
+  sortDriveButton.setAttribute("aria-pressed", String(sortDriveAscending));
+  renderRows();
+});
 resetButton.addEventListener("click", () => {
   searchInput.value = "";
   monthFilter.value = "all";
   distanceFilter.value = "all";
   statusFilter.value = "all";
+  sortDriveAscending = false;
+  sortDriveButton.setAttribute("aria-pressed", "false");
   renderRows();
   searchInput.focus();
 });
